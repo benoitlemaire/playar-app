@@ -28,7 +28,12 @@
 </template>
 
 <script>
-export default {}
+export default {
+  mounted () {
+    // const offers = this.$axios.get('offers')
+    console.log(this.$axios.defaults.baseURL)
+  }
+}
 </script>
 
 <style>

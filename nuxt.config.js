@@ -3,7 +3,7 @@ export default {
   head: {
     title: 'playar-app',
     htmlAttrs: {
-      lang: 'en'
+      lang: 'fr'
     },
     meta: [
       { charset: 'utf-8' },
@@ -41,7 +41,9 @@ export default {
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
-  axios: {},
+  axios: {
+    baseURL: process.env === 'production' ? 'https://playar-api.herokuapp.com/api/' : 'http://127.0.0.1:8000/api/'
+  },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
