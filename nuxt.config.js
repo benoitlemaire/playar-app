@@ -44,8 +44,11 @@ export default {
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
-    // baseURL: dev ? 'https://playar-api.herokuapp.com/api/' : 'http://127.0.0.1:8000/api/'
-    baseURL: dev ? 'aaaa' : 'bb'
+    baseURL: dev ? 'http://127.0.0.1:8000/api/' : 'https://playar-api.herokuapp.com/api/'
+  },
+
+  eslint: {
+    cache: false
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
