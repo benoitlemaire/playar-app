@@ -1,7 +1,11 @@
 <template>
   <div class="text-red-500">
+    <p v-if="serverError.name">
+      {{ serverError.name }}
+    </p>
+
     <template v-if="rules.required">
-      <p v-if="!error.required">
+      <p v-if="!frontError.required">
         Le nom est requis
       </p>
     </template>
