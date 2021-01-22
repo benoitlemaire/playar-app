@@ -1,11 +1,16 @@
 export default {
   props: {
-    error: {
+    frontError: {
       type: Object,
       default: () => {}
     },
 
     rules: {
+      type: Object,
+      default: () => {}
+    },
+
+    serverError: {
       type: Object,
       default: () => {}
     }

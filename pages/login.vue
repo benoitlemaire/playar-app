@@ -3,36 +3,47 @@
     <h1>Login</h1>
 
     <form @submit.prevent="login">
-      <base-input
+      <lazy-base-input
         v-model="form.email"
+        class="block mb-4"
+        :label="'votre email'"
         placeholder="joh.doe@gmail.com"
         type="email"
         @blur="$v.form.email.$touch()"
+        @focus="clearServerError('email')"
       >
-        <error-message-mail
-          v-if="$v.form.email.$error"
+        <lazy-error-message-mail
+          v-if="$v.form.email.$error || severError.email"
           slot="errorMessage"
-          :error="$v.form.email"
+          :front-error="$v.form.email"
+          :server-error="severError"
           :rules="$v.form.email.$params"
         />
-      </base-input>
+      </lazy-base-input>
 
-      <base-input
+      <lazy-base-input
         v-model="form.password"
+        class="block mb-4"
+        :label="'Mot de passe'"
         type="password"
         placeholder="votremotdepasse"
         @blur="$v.form.password.$touch()"
+        @focus="clearServerError('password')"
       >
-        <error-message-password
-          v-if="$v.form.password.$error"
+        <lazy-error-message-password
+          v-if="$v.form.password.$error || severError.password"
           slot="errorMessage"
-          :error="$v.form.password"
+          :front-error="$v.form.password"
+          :server-error="severError"
           :rules="$v.form.password.$params"
         />
-      </base-input>
+      </lazy-base-input>
 
-      <p v-if="serverErrors.length" class="text-red-500">
-        {{ serverErrors }}
+      <p
+        v-if="severError.unauthorized"
+        class="text-red-500"
+      >
+        {{ severError.unauthorized }}
       </p>
 
       <button>
@@ -43,21 +54,18 @@
 </template>
 
 <script>
-import { email, minLength } from 'vuelidate/lib/validators'
-import BaseInput from '@/components/Forms/BaseInput.vue'
-import ErrorMessageMail from '@/components/Forms/Errors/ErrorMessageMail.vue'
-import ErrorMessagePassword from '@/components/Forms/Errors/ErrorMessagePassword.vue'
+import { email, minLength, required } from 'vuelidate/lib/validators'
+import handleServerError from '~/mixins/handleServerError.js'
 
 export default {
-  components: { BaseInput, ErrorMessageMail, ErrorMessagePassword },
+  mixins: [handleServerError],
+
   data () {
     return {
       form: {
         email: '',
         password: ''
-      },
-
-      serverErrors: []
+      }
     }
   },
 
@@ -72,38 +80,18 @@ export default {
             this.handleServerError(error)
           })
       }
-    },
-
-    handleServerError (error) {
-      const { data, status, statusText } = error.response
-
-      console.log(error.response)
-
-      if (status === 401 && statusText === 'Unauthorized') {
-        this.serverErrors = 'Identifiants incorrects'
-      }
-
-      if (status === 422 && statusText === 'Unprocessable Entity') {
-        for (const [name, message] of Object.entries(data)) {
-          // TODO : Trouver un moyen de faire fonctionner ça
-          this.serverErrors.push(
-            {
-              name,
-              message: message[0]
-            })
-        }
-      }
     }
-
   },
 
   validations: {
     form: {
       email: {
-        email
+        email,
+        required
       },
 
       password: {
+        required,
         minLength: minLength(6)
       }
     }
